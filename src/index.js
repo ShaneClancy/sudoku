@@ -5,7 +5,7 @@ import './index.css';
 class App extends React.Component {
     render() {
         return (
-            <div class="app">
+            <div className="app">
                 <Header />
                 <Game />
             </div>
@@ -37,12 +37,22 @@ class Game extends React.Component {
 
 class Board extends React.Component {
 
+    constructor(props) {
+        super(props);
+        // Initialize Grid and Current Selected Choice
+        this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
+    }
+
+    updateChoiceNumberBoard = (choiceNumber) => { 
+        this.setState({ currentChoice: choiceNumber });
+    }
+
     renderSquares(x,y) {
         return <Squares x={x} y={y} />
     }
 
     renderChoices() {
-        return <Choices />
+        return <Choices currentChoice={this.state.currentChoice} updateChoiceNumberBoard={this.updateChoiceNumberBoard}/>
     }
 
     render() {
@@ -114,9 +124,10 @@ class Tile extends React.Component {
 }
 
 class Choice extends React.Component {
+
     render() {
         return (
-            <button className="choice">
+            <button className="choice" onClick={this.props.updateChoiceNumber}>
                 {this.props.value}
             </button>
         )
@@ -124,8 +135,13 @@ class Choice extends React.Component {
 }
 
 class Choices extends React.Component {
+
+    updateChoiceNumber = (i) => {
+        this.props.updateChoiceNumberBoard(i);
+    }
+
     renderChoice(i) {
-        return <Choice value={i} />
+        return <Choice value={i} updateChoiceNumber={this.updateChoiceNumber}/>
     }
 
     render() {
@@ -140,6 +156,7 @@ class Choices extends React.Component {
                 {this.renderChoice(7)}
                 {this.renderChoice(8)}
                 {this.renderChoice(9)}
+                <button onClick={() => {console.log(this.props.currentChoice)}} label="Current Choice"/>
             </div>
         );
     }
