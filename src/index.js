@@ -41,10 +41,11 @@ class Board extends React.Component {
         super(props);
         // Initialize Grid and Current Selected Choice
         this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
+        this.updateChoice = this.updateChoice.bind(this);
     }
 
-    updateChoiceNumberBoard = (choiceNumber) => { 
-        this.setState({ currentChoice: choiceNumber });
+    updateChoice(choice) {
+        this.setState( {currentChoice: choice });
     }
 
     renderSquares(x,y) {
@@ -52,7 +53,7 @@ class Board extends React.Component {
     }
 
     renderChoices() {
-        return <Choices currentChoice={this.state.currentChoice} updateChoiceNumberBoard={this.updateChoiceNumberBoard}/>
+        return <Choices currentChoice={this.state.currentChoice} updateChoice={this.updateChoice}/>
     }
 
     render() {
@@ -113,11 +114,16 @@ class Squares extends React.Component {
 }
 
 class Tile extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = { value: this.props.value }
+    }
+
     render() {
-        const value = Math.floor(Math.random() * 9) + 1;
         return (
             <button className='tile'>
-                {value}
+                {this.state.value}
             </button>
         );
     }
@@ -126,8 +132,9 @@ class Tile extends React.Component {
 class Choice extends React.Component {
 
     render() {
+        var updateChoice = this.props.updateChoice;
         return (
-            <button className="choice" onClick={this.props.updateChoiceNumber}>
+            <button className="choice" onClick={() => updateChoice(this.props.value)}>
                 {this.props.value}
             </button>
         )
@@ -136,12 +143,9 @@ class Choice extends React.Component {
 
 class Choices extends React.Component {
 
-    updateChoiceNumber = (i) => {
-        this.props.updateChoiceNumberBoard(i);
-    }
-
     renderChoice(i) {
-        return <Choice value={i} updateChoiceNumber={this.updateChoiceNumber}/>
+        var updateChoice = this.props.updateChoice;
+        return <Choice value={i} updateChoice={updateChoice}/>
     }
 
     render() {
