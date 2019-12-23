@@ -48,8 +48,12 @@ class Board extends React.Component {
         this.setState( {currentChoice: choice });
     }
 
+    getGridIfRevealed(x,y) {
+        return this.state.grid[x][y];
+    }
+
     renderSquares(x,y) {
-        return <Squares x={x} y={y} />
+        return <Squares x={x} y={y} getGridIfRevealed={this.getGridIfRevealed}/>
     }
 
     renderChoices() {
@@ -87,7 +91,7 @@ class Board extends React.Component {
 class Squares extends React.Component {
 
     renderTile(x,y) {
-        return <Tile x={x} y={y} />
+        return <Tile x={x} y={y} value={Math.floor(Math.random() * 9) + 1}/>
     }
 
     render() {
@@ -116,16 +120,31 @@ class Squares extends React.Component {
 class Tile extends React.Component {
 
     constructor(props) {
-        super(props)
-        this.state = { value: this.props.value }
+        super(props);
+        this.state = { value: this.props.value, hidden : true, x: this.props.x, y: this.props.y };
+    }
+
+    getId() {
+        return toString(this.props.x) + toString(this.props.y);
+    }
+
+    turnRed() {
+        const currentTile = document.getElementById(this.getId);
+        currentTile.classList.add('highlighted');
     }
 
     render() {
-        return (
-            <button className='tile'>
-                {this.state.value}
-            </button>
-        );
+        if (this.state.hidden === true) {
+            return (
+            <button id={this.getId}className="tile" onClick={this.turnRed}>{}</button>
+            );
+        } else {
+            return (
+                <button className='tile' onClick={this.turnRed}>
+                    {this.state.value}
+                </button>
+            );
+        }
     }
 }
 
