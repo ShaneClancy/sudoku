@@ -97,8 +97,8 @@ class Board extends React.Component {
 
 class Squares extends React.Component {
 
-    renderTile(x,y) {
-        return <Tile x={x} y={y} value={Math.floor(Math.random() * 9) + 1}/>
+    renderTile(i,j) {
+        return <Tile x={(this.props.x * 3) + i} y={(this.props.y * 3) + j} value={Math.floor(Math.random() * 9) + 1}/>
     }
 
     render() {
