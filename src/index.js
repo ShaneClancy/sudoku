@@ -47,11 +47,33 @@ class Board extends React.Component {
     constructor(props) {
         super(props);
         // Initialize Grid and Current Selected Choice
-        this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
+        // this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
 
         const gridCopy = new Array(9).fill(new Array(9).fill(0));
 
         gridCopy[0] = this.shuffle(Array.from(Array(9).keys()).map(x => ++x));
+
+        let square = Array.from(Array(9).keys()).map(x => ++x);
+        let sel = Array.from(gridCopy[0]).splice(0,3);
+        console.log(sel);
+
+        for (let i = 0; i < square.length; i++) {
+            if (sel.includes(square[i])) {
+                const squareCpy1 = Array.from(square);
+                const squareCpy2 = Array.from(square);
+                square = [squareCpy1.splice(0, i), (squareCpy2.splice(i+1, squareCpy2.length))].flat();
+            }
+        }
+
+        square = this.shuffle(square);
+
+        for (let i = 1; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                console.log((i - 1)*3 + j);
+                console.log(square[(i-1)*3 + j]);
+                gridCopy[i][j] = square[(i - 1)*3 + j];
+            }
+        }
 
         this.state = ( { grid : gridCopy, currentChoice: 0 } );
         console.log(this.state.grid);
@@ -75,6 +97,31 @@ class Board extends React.Component {
         return arr;
     }
 
+    inRow = (grid, row, val) => {
+        for (let i = 0; i < 9; i++) {
+            if (grid[row][i] === val) { return true; }
+        } 
+        return false;
+    }
+
+    inCol = (grid,col, val) => {
+        for (let i = 0; i < 9; i++) {
+            if (grid[i][col] === val) { return true; }
+        } 
+        return false;
+    }
+
+    inSquare = (grid, squareNum, val) => {
+        const xStart = (squareNum % 3) - 1;
+        const yStart = Math.floor((squareNum - 1) / 3) * 3;
+        for (let i = xStart; xStart + 3; i++) {
+            for (let j = yStart; yStart + 3; j++) {
+                if (grid[i][j] === val) { return true }
+            }
+        }
+        return false;
+    }
+
     updateChoice = (choice) => {
         console.log(choice);
         this.setState( {currentChoice: choice });
@@ -92,7 +139,7 @@ class Board extends React.Component {
         const items = [];
 
         for (let j = 0; j < 9; j++) {
-            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]}/>);
+            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]} hidden={false}/>);
         }
 
         return items;
@@ -125,8 +172,8 @@ class Tile extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { value: this.props.value, hidden : true, x: this.props.x, y: this.props.y };
-        if (this.props.hidden === false) { this.setState({ hidden: false }); }
+        if (this.props.hidden === false) { this.state =  { value: this.props.value, hidden : false, x: this.props.x, y: this.props.y }; }
+        else {  this.statte = { value: this.props.value, hidden : true, x: this.props.x, y: this.props.y }; }
     }
 
     getId = () => {
