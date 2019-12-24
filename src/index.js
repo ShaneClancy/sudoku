@@ -48,7 +48,31 @@ class Board extends React.Component {
         super(props);
         // Initialize Grid and Current Selected Choice
         this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
-        this.updateChoice = this.updateChoice.bind(this);
+
+        const gridCopy = new Array(9).fill(new Array(9).fill(0));
+
+        gridCopy[0] = this.shuffle(Array.from(Array(9).keys()).map(x => ++x));
+
+        this.state = ( { grid : gridCopy, currentChoice: 0 } );
+        console.log(this.state.grid);
+
+    }
+
+    shuffle = (arr) => {
+        var curr = arr.length;
+        var temp, rand;
+
+        while( curr !== 0 ) {
+
+            rand = Math.floor(Math.random() * curr);
+            curr -= 1;
+        
+            temp = arr[curr];
+            arr[curr] = arr[rand];
+            arr[rand] = temp;
+        }
+
+        return arr;
     }
 
     updateChoice = (choice) => {
@@ -102,6 +126,7 @@ class Tile extends React.Component {
     constructor(props) {
         super(props);
         this.state = { value: this.props.value, hidden : true, x: this.props.x, y: this.props.y };
+        if (this.props.hidden === false) { this.setState({ hidden: false }); }
     }
 
     getId = () => {
