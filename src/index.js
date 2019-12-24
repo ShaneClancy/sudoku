@@ -51,15 +51,20 @@ class Board extends React.Component {
         this.updateChoice = this.updateChoice.bind(this);
     }
 
-    updateChoice(choice) {
+    updateChoice = (choice) => {
+        console.log(choice);
         this.setState( {currentChoice: choice });
     }
 
-    renderChoices() {
-        return <Choices currentChoice={this.state.currentChoice} updateChoice={this.updateChoice}/>
+    getCurrentChoice = () => {
+        return this.state.currentChoice;
     }
 
-    renderRow(i) {
+    renderChoices = () => {
+        return <Choices currentChoice={this.state.currentChoice} updateChoice={this.updateChoice} getCurrentChoice={this.getCurrentChoice}/>
+    }
+
+    renderRow = (i) => {
         const items = [];
 
         for (let j = 0; j < 9; j++) {
@@ -99,7 +104,7 @@ class Tile extends React.Component {
         this.state = { value: this.props.value, hidden : true, x: this.props.x, y: this.props.y };
     }
 
-    getId() {
+    getId = () => {
         return ("tile" + this.props.x.toString() + "." + this.props.y.toString());
     }
 
@@ -130,12 +135,11 @@ class Choice extends React.Component {
         this.props.updateChoice(this.props.value);
         const choice = document.getElementById("choice" + this.props.value);
         choice.classList.add("highlighted");
-        console.log(choice);
     }
 
     render() {
         return (
-            <button className="choice" id={"choice" + this.props.value} onClick={this.props.updateChoiceWithinChoice}>
+            <button className="choice" id={"choice" + this.props.value} onClick={this.updateChoiceWithinChoice}>
                 {this.props.value}
             </button>
         )
@@ -144,9 +148,13 @@ class Choice extends React.Component {
 
 class Choices extends React.Component {
 
-    renderChoice(i) {
+    renderChoice = (i) => {
         var updateChoice = this.props.updateChoice;
         return <Choice value={i} updateChoice={updateChoice}/>
+    }
+
+    getCurrentChoiceTesting = () => {
+        console.log(this.props.currentChoice);
     }
 
 
@@ -160,7 +168,7 @@ class Choices extends React.Component {
         return (
             <div className="choices-container">
                 {items}
-                <button onClick={() => {}}>Current Choice</button>
+                <button onClick={this.getCurrentChoiceTesting}>Current Choice</button>
             </div>
         );
     }
