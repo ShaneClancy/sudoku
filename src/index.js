@@ -63,7 +63,7 @@ class Board extends React.Component {
         const items = [];
 
         for (let j = 0; j < 9; j++) {
-            items.push(<Tile key={(i)*(9) + j} x={i} y={j}/>);
+            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]}/>);
         }
 
         return items;
@@ -112,7 +112,7 @@ class Tile extends React.Component {
     render() {
         if (this.state.hidden === true) {
             return (
-                <button id={this.getId()} className="tile" onClick={this.turnRed}>&#32;</button>
+                <button id={this.getId()} className="tile" onClick={this.turnRed}><br></br></button>
             );
         } else {
             return (
