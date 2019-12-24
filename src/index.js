@@ -55,69 +55,37 @@ class Board extends React.Component {
         this.setState( {currentChoice: choice });
     }
 
-    getGridIfRevealed(x,y) {
-        return this.state.grid[x][y];
-    }
-
-    renderSquares(x,y) {
-        return <Squares x={x} y={y} getGridIfRevealed={this.getGridIfRevealed}/>
-    }
-
     renderChoices() {
         return <Choices currentChoice={this.state.currentChoice} updateChoice={this.updateChoice}/>
     }
 
+    renderRow(i) {
+        const items = [];
+
+        for (let j = 0; j < 9; j++) {
+            items.push(<Tile key={(i)*(9) + j} x={i} y={j}/>);
+        }
+
+        return items;
+    }
+
     render() {
+
         return  (
             <div className="content-container">
                 <div className="game-board">
-                    <div className="board-row">
-                        {this.renderSquares(0,0)}
-                        {this.renderSquares(0,1)}
-                        {this.renderSquares(0,2)}
-                    </div>
-                    <div className="board-row">
-                        {this.renderSquares(1,0)}
-                        {this.renderSquares(1,1)}
-                        {this.renderSquares(1,2)}
-                    </div>
-                    <div className="board-row">
-                        {this.renderSquares(2,0)}
-                        {this.renderSquares(2,1)}
-                        {this.renderSquares(2,2)}
-                    </div>
+                    <div className="board-row"> {this.renderRow(0)} </div>
+                    <div className="board-row"> {this.renderRow(1)} </div>
+                    <div className="board-row"> {this.renderRow(2)} </div>
+                    <div className="board-row"> {this.renderRow(3)} </div>
+                    <div className="board-row"> {this.renderRow(4)} </div>
+                    <div className="board-row"> {this.renderRow(5)} </div>
+                    <div className="board-row"> {this.renderRow(6)} </div>
+                    <div className="board-row"> {this.renderRow(7)} </div>
+                    <div className="board-row"> {this.renderRow(8)} </div>
                 </div>
                 <div className="choices">
                     {this.renderChoices()}
-                </div>
-            </div>
-        );
-    }
-}
-
-class Squares extends React.Component {
-
-    renderTile(i,j) {
-        return <Tile x={(this.props.x * 3) + i} y={(this.props.y * 3) + j} value={Math.floor(Math.random() * 9) + 1}/>
-    }
-
-    render() {
-        return (
-            <div className="squares-collection">
-                <div className="squares-row">
-                    {this.renderTile(0,0)}
-                    {this.renderTile(0,1)}
-                    {this.renderTile(0,2)}
-                </div>
-                <div className="squares-row">
-                    {this.renderTile(1,0)}
-                    {this.renderTile(1,1)}
-                    {this.renderTile(1,2)}
-                </div>
-                <div className="squares-row">
-                    {this.renderTile(2,0)}
-                    {this.renderTile(2,1)}
-                    {this.renderTile(2,2)}
                 </div>
             </div>
         );
@@ -183,17 +151,15 @@ class Choices extends React.Component {
 
 
     render() {
+        const items = [];
+        
+        for (let i = 1; i <= 9; i++) {
+            items.push(<Choice key={i} value={i} updateChoice={this.props.updateChoice}/>)
+        }
+
         return (
             <div className="choices-container">
-                {this.renderChoice(1)}
-                {this.renderChoice(2)}
-                {this.renderChoice(3)}
-                {this.renderChoice(4)}
-                {this.renderChoice(5)}
-                {this.renderChoice(6)}
-                {this.renderChoice(7)}
-                {this.renderChoice(8)}
-                {this.renderChoice(9)}
+                {items}
                 <button onClick={() => {}}>Current Choice</button>
             </div>
         );
