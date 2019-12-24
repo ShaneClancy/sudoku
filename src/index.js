@@ -16,10 +16,15 @@ class App extends React.Component {
 class Header extends React.Component {
     render() {
         return (
-            <div className="header">
-                <div className="nav-component">Info</div>
-                <div className="nav-component">Help</div>
-                <div className="nav-component">Documentation</div>
+            <div className="top">
+                <div className="header">
+                    <div className="title">Sudoku</div>
+                </div>
+                <div className="nav">
+                    <div className="nav-component">Info</div>
+                    <div className="nav-component">Help</div>
+                    <div className="nav-component">Documentation</div>
+                </div>
             </div>
         );
     }
@@ -29,7 +34,9 @@ class Game extends React.Component {
     render() {
         return (
             <div className="content">
-                <Board /> 
+                <div></div>
+                <div><Board /></div>
+                <div></div> 
             </div>
         )
     }
@@ -125,18 +132,19 @@ class Tile extends React.Component {
     }
 
     getId() {
-        return toString(this.props.x) + toString(this.props.y);
+        return ("tile" + this.props.x.toString() + "." + this.props.y.toString());
     }
 
-    turnRed() {
-        const currentTile = document.getElementById(this.getId);
-        currentTile.classList.add('highlighted');
+    turnRed = () => {
+        console.log(this.getId());
+        const currentTile = document.getElementById(this.getId());
+        currentTile.classList.add("red");
     }
 
     render() {
         if (this.state.hidden === true) {
             return (
-            <button id={this.getId}className="tile" onClick={this.turnRed}>{}</button>
+                <button id={this.getId()} className="tile" onClick={this.turnRed}><span>\t </span></button>
             );
         } else {
             return (
@@ -150,10 +158,13 @@ class Tile extends React.Component {
 
 class Choice extends React.Component {
 
+    updateChoiceWithinChoice = () => {
+        this.props.updateChoice(this.props.value);
+    }
+
     render() {
-        var updateChoice = this.props.updateChoice;
         return (
-            <button className="choice" onClick={() => updateChoice(this.props.value)}>
+            <button className="choice" id={"choice" + this.props.value} onClick={this.props.updateChoice}>
                 {this.props.value}
             </button>
         )
