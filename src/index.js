@@ -144,7 +144,7 @@ class Tile extends React.Component {
     render() {
         if (this.state.hidden === true) {
             return (
-                <button id={this.getId()} className="tile" onClick={this.turnRed}><span>\t </span></button>
+                <button id={this.getId()} className="tile" onClick={this.turnRed}>&#32;</button>
             );
         } else {
             return (
@@ -160,11 +160,14 @@ class Choice extends React.Component {
 
     updateChoiceWithinChoice = () => {
         this.props.updateChoice(this.props.value);
+        const choice = document.getElementById("choice" + this.props.value);
+        choice.classList.add("highlighted");
+        console.log(choice);
     }
 
     render() {
         return (
-            <button className="choice" id={"choice" + this.props.value} onClick={this.props.updateChoice}>
+            <button className="choice" id={"choice" + this.props.value} onClick={this.props.updateChoiceWithinChoice}>
                 {this.props.value}
             </button>
         )
@@ -178,6 +181,7 @@ class Choices extends React.Component {
         return <Choice value={i} updateChoice={updateChoice}/>
     }
 
+
     render() {
         return (
             <div className="choices-container">
@@ -190,7 +194,7 @@ class Choices extends React.Component {
                 {this.renderChoice(7)}
                 {this.renderChoice(8)}
                 {this.renderChoice(9)}
-                <button onClick={() => {console.log(this.props.currentChoice)}} label="Current Choice"/>
+                <button onClick={() => {}}>Current Choice</button>
             </div>
         );
     }
