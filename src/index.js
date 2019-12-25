@@ -49,29 +49,42 @@ class Board extends React.Component {
         // Initialize Grid and Current Selected Choice
         // this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
 
-        const gridCopy = new Array(9).fill(new Array(9).fill(0));
+        let gridCopy = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ];
+        
+        console.log(gridCopy);
+        
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 9; j++) {
+                const guess = Math.floor(Math.random() * 9) + 1;
+                // calculate which square based on i,j coordinates
+                let squareNum = 0;
+                if (i < 3 && j < 3) { squareNum = 1; }
+                else if (i > 2 && i < 6 && j < 3) { squareNum = 2; }
+                else if (i > 5 && j < 3) { squareNum = 3; }
+                else if (i < 3 && j > 2 && j < 6) { squareNum = 4; }
+                else if (i > 2 && i < 6 && j > 2 && j < 6) { squareNum = 5; }
+                else if (i > 5 && j > 2 && j < 6) { squareNum = 6; }
+                else if (i < 3 && j > 5) { squareNum = 7; }
+                else if (i > 2 && i < 6 && j > 5) { squareNum = 8; }
+                else { squareNum = 9; }
 
-        gridCopy[0] = this.shuffle(Array.from(Array(9).keys()).map(x => ++x));
+                console.log("squareNum: " + squareNum);
 
-        let square = Array.from(Array(9).keys()).map(x => ++x);
-        let sel = Array.from(gridCopy[0]).splice(0,3);
-        console.log(sel);
-
-        for (let i = 0; i < square.length; i++) {
-            if (sel.includes(square[i])) {
-                const squareCpy1 = Array.from(square);
-                const squareCpy2 = Array.from(square);
-                square = [squareCpy1.splice(0, i), (squareCpy2.splice(i+1, squareCpy2.length))].flat();
-            }
-        }
-
-        square = this.shuffle(square);
-
-        for (let i = 1; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                console.log((i - 1)*3 + j);
-                console.log(square[(i-1)*3 + j]);
-                gridCopy[i][j] = square[(i - 1)*3 + j];
+                if (!(this.inRow(gridCopy, i, guess)) && !(this.inCol(gridCopy, j, guess)) && !(this.inSquare(gridCopy, squareNum, guess))) {
+                    gridCopy[i][j] = guess;
+                } else {
+                    j--;
+                }
             }
         }
 
@@ -104,7 +117,7 @@ class Board extends React.Component {
         return false;
     }
 
-    inCol = (grid,col, val) => {
+    inCol = (grid, col, val) => {
         for (let i = 0; i < 9; i++) {
             if (grid[i][col] === val) { return true; }
         } 
@@ -112,11 +125,39 @@ class Board extends React.Component {
     }
 
     inSquare = (grid, squareNum, val) => {
-        const xStart = (squareNum % 3) - 1;
-        const yStart = Math.floor((squareNum - 1) / 3) * 3;
-        for (let i = xStart; xStart + 3; i++) {
-            for (let j = yStart; yStart + 3; j++) {
-                if (grid[i][j] === val) { return true }
+        let xStart = 0;
+        let yStart = 0;
+        if (squareNum === 1) {
+            xStart = 0;
+            yStart = 0;
+        } else if (squareNum === 2) {
+            xStart = 3;
+            yStart = 0;
+        } else if (squareNum === 3) {
+            xStart = 6;
+            yStart = 0;
+        } else if (squareNum === 4) {
+            xStart = 0;
+            yStart = 3;
+        } else if (squareNum === 5) {
+            xStart = 3;
+            yStart = 3;
+        } else if (squareNum === 6) {
+            xStart = 6;
+            yStart = 3;
+        } else if (squareNum === 7) {
+            xStart = 0;
+            yStart = 6;
+        } else if (squareNum === 8) {
+            xStart = 3;
+            yStart = 6;
+        } else {
+            xStart = 6;
+            yStart = 6;
+        }
+        for (let i = xStart; i < xStart + 3; i++) {
+            for (let j = yStart; j < yStart + 3; j++) {
+                if (grid[i][j] === val) { return true; }
             }
         }
         return false;
