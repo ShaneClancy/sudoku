@@ -132,36 +132,9 @@ class Board extends React.Component {
     }
 
     inSquare = (grid, squareNum, val) => {
-        let xStart = 0;
-        let yStart = 0;
-        if (squareNum === 1) {
-            xStart = 0;
-            yStart = 0;
-        } else if (squareNum === 2) {
-            xStart = 3;
-            yStart = 0;
-        } else if (squareNum === 3) {
-            xStart = 6;
-            yStart = 0;
-        } else if (squareNum === 4) {
-            xStart = 0;
-            yStart = 3;
-        } else if (squareNum === 5) {
-            xStart = 3;
-            yStart = 3;
-        } else if (squareNum === 6) {
-            xStart = 6;
-            yStart = 3;
-        } else if (squareNum === 7) {
-            xStart = 0;
-            yStart = 6;
-        } else if (squareNum === 8) {
-            xStart = 3;
-            yStart = 6;
-        } else {
-            xStart = 6;
-            yStart = 6;
-        }
+        let xStart = Math.floor((squareNum - 1) % 3) * 3;
+        let yStart = Math.floor((squareNum - 1) / 3) * 3;
+
         for (let i = xStart; i < xStart + 3; i++) {
             for (let j = yStart; j < yStart + 3; j++) {
                 if (grid[i][j] === val) { return true; }
