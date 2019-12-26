@@ -60,34 +60,49 @@ class Board extends React.Component {
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
         ];
+
+        const modeMap = {
+            'EASY' : 40,
+            'MEDIUM' : 30,
+            'HARD' : 20,
+        };
         
-        console.log(gridCopy);
-        
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 9; j++) {
-                const guess = Math.floor(Math.random() * 9) + 1;
-                // calculate which square based on i,j coordinates
+        let counter = modeMap['EASY'];
+        let spotChoices = [[0,0]];
+        console.log(counter);
+
+        while (counter > 0) {
+            let x = Math.floor(Math.random() * 9);
+            let y = Math.floor(Math.random() * 9);
+            if (!spotChoices.includes([x,y])) {
+                // push (x,y) and calculate square.
                 let squareNum = 0;
-                if (i < 3 && j < 3) { squareNum = 1; }
-                else if (i > 2 && i < 6 && j < 3) { squareNum = 2; }
-                else if (i > 5 && j < 3) { squareNum = 3; }
-                else if (i < 3 && j > 2 && j < 6) { squareNum = 4; }
-                else if (i > 2 && i < 6 && j > 2 && j < 6) { squareNum = 5; }
-                else if (i > 5 && j > 2 && j < 6) { squareNum = 6; }
-                else if (i < 3 && j > 5) { squareNum = 7; }
-                else if (i > 2 && i < 6 && j > 5) { squareNum = 8; }
+                if (x < 3 && y < 3) { squareNum = 1; }
+                else if (x > 2 && x < 6 && y < 3) { squareNum = 2; }
+                else if (x > 5 && y < 3) { squareNum = 3; }
+                else if (x < 3 && y > 2 && y < 6) { squareNum = 4; }
+                else if (x > 2 && x < 6 && y > 2 && y < 6) { squareNum = 5; }
+                else if (x > 5 && y > 2 && y < 6) { squareNum = 6; }
+                else if (x < 3 && y > 5) { squareNum = 7; }
+                else if (x > 2 && x < 6 && y > 5) { squareNum = 8; }
                 else { squareNum = 9; }
-
-                console.log("squareNum: " + squareNum);
-
-                if (!(this.inRow(gridCopy, i, guess)) && !(this.inCol(gridCopy, j, guess)) && !(this.inSquare(gridCopy, squareNum, guess))) {
-                    gridCopy[i][j] = guess;
-                } else {
-                    j--;
+                // guess random number to put in square.
+                let indCounter = 0;
+                while(true) {
+                    const guess = Math.floor(Math.random() * 9) + 1;
+                    if (!(this.inRow(gridCopy, x, guess)) && !(this.inCol(gridCopy, y, guess)) && !(this.inSquare(gridCopy, squareNum, guess))) {
+                        gridCopy[x][y] = guess;
+                        counter--;
+                        spotChoices.push([x,y]);
+                        break;
+                    } else {
+                        indCounter++;
+                        if (indCounter >= 9) { break; }
+                    }
                 }
             }
         }
-
+        
         this.state = ( { grid : gridCopy, currentChoice: 0 } );
         console.log(this.state.grid);
 
@@ -213,8 +228,8 @@ class Tile extends React.Component {
 
     constructor(props) {
         super(props);
-        if (this.props.hidden === false) { this.state =  { value: this.props.value, hidden : false, x: this.props.x, y: this.props.y }; }
-        else {  this.statte = { value: this.props.value, hidden : true, x: this.props.x, y: this.props.y }; }
+        if (this.props.hidden === false || this.props.value === 0) { this.state =  { value: this.props.value, hidden : false, x: this.props.x, y: this.props.y }; }
+        else {  this.state = { value: this.props.value, hidden : true, x: this.props.x, y: this.props.y }; }
     }
 
     getId = () => {
@@ -228,7 +243,7 @@ class Tile extends React.Component {
     }
 
     render() {
-        if (this.state.hidden === true) {
+        if (this.state.hidden === true || this.state.value === 0) {
             return (
                 <button id={this.getId()} className="tile" onClick={this.turnRed}><br></br></button>
             );
