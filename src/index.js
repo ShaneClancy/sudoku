@@ -77,15 +77,7 @@ class Board extends React.Component {
             if (!spotChoices.includes([x,y])) {
                 // push (x,y) and calculate square.
                 let squareNum = 0;
-                if (x < 3 && y < 3) { squareNum = 1; }
-                else if (x > 2 && x < 6 && y < 3) { squareNum = 2; }
-                else if (x > 5 && y < 3) { squareNum = 3; }
-                else if (x < 3 && y > 2 && y < 6) { squareNum = 4; }
-                else if (x > 2 && x < 6 && y > 2 && y < 6) { squareNum = 5; }
-                else if (x > 5 && y > 2 && y < 6) { squareNum = 6; }
-                else if (x < 3 && y > 5) { squareNum = 7; }
-                else if (x > 2 && x < 6 && y > 5) { squareNum = 8; }
-                else { squareNum = 9; }
+                squareNum = Math.floor(x / 3) + (Math.floor(y / 3) * 3) + 1;
                 // guess random number to put in square.
                 let indCounter = 0;
                 while(true) {
