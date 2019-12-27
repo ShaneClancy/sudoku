@@ -69,13 +69,11 @@ class Board extends React.Component {
         
         let counter = modeMap['EASY'];
         let spotChoices = [[0,0]];
-        console.log(counter);
 
         while (counter > 0) {
             let x = Math.floor(Math.random() * 9);
             let y = Math.floor(Math.random() * 9);
             if (!spotChoices.includes([x,y])) {
-                // push (x,y) and calculate square.
                 let squareNum = 0;
                 squareNum = Math.floor(x / 3) + (Math.floor(y / 3) * 3) + 1;
                 // guess random number to put in square.
@@ -96,25 +94,7 @@ class Board extends React.Component {
         }
         
         this.state = ( { grid : gridCopy, currentChoice: 0 } );
-        console.log(this.state.grid);
 
-    }
-
-    shuffle = (arr) => {
-        var curr = arr.length;
-        var temp, rand;
-
-        while( curr !== 0 ) {
-
-            rand = Math.floor(Math.random() * curr);
-            curr -= 1;
-        
-            temp = arr[curr];
-            arr[curr] = arr[rand];
-            arr[rand] = temp;
-        }
-
-        return arr;
     }
 
     inRow = (grid, row, val) => {
