@@ -140,7 +140,7 @@ class Board extends React.Component {
         const items = [];
 
         for (let j = 0; j < 9; j++) {
-            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]} hidden={false}/>);
+            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]} originalValue={this.state.grid[i][j]} hidden={false} getCurrentChoice={this.getCurrentChoice}/>);
         }
 
         return items;
@@ -181,24 +181,33 @@ class Tile extends React.Component {
         return ("tile" + this.props.x.toString() + "." + this.props.y.toString());
     }
 
-    turnRed = () => {
+    getCurrentChoice = () => {
+        return this.props.getCurrentChoice();
+    }
+
+    onClick = () => {
         console.log(this.getId());
         const currentTile = document.getElementById(this.getId());
+        // Add color
         let lastRedTile = document.getElementsByClassName("red");
         if (lastRedTile.length > 0) {
             lastRedTile[0].classList.remove("red");
         }
         currentTile.classList.add("red");
+        // Updte value on Tile
+        if (this.props.originalValue === 0 && this.getCurrentChoice() !== 0) {
+            this.setState( {value: this.getCurrentChoice(), hidden: false, x: this.props.x, y: this.props.y })
+        }
     }
 
     render() {
         if (this.state.hidden === true || this.state.value === 0) {
             return (
-                <button id={this.getId()} className="tile" onClick={this.turnRed}><br></br></button>
+                <button id={this.getId()} className="tile" onClick={this.onClick}><br></br></button>
             );
         } else {
             return (
-                <button id={this.getId()} className='tile' onClick={this.turnRed}>
+                <button id={this.getId()} className='tile' onClick={this.onClick}>
                     {this.state.value}
                 </button>
             );
