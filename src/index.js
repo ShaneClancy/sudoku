@@ -211,6 +211,10 @@ class Choice extends React.Component {
     updateChoiceWithinChoice = () => {
         this.props.updateChoice(this.props.value);
         const choice = document.getElementById("choice" + this.props.value);
+        let oldSelection = document.getElementsByClassName("highlighted");
+        if (oldSelection.length > 0) {
+            oldSelection[0].classList.remove("highlighted");
+        }
         choice.classList.add("highlighted");
     }
 

@@ -106,19 +106,12 @@
     background-color: lightgreen;
 }
 
-.selected {
-    display: inline-block;
-    width: 10%;
-    height: 10%;
-    padding: 0.1em;
-    border: 0.1em solid black;
-    font-size:2.5em;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    transition: background-color 0.25s ease;
-    background-color: yellow;
-}
-
 .red {
     transition: background-color 0.5s ease;
     background-color: red;
+}
+
+.highlighted {
+    transition: background-color 0.5s ease;
+    background-color: yellow;
 }
