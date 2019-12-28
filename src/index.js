@@ -123,6 +123,33 @@ class Board extends React.Component {
         return false;
     }
 
+    inRowHelper = (x, val) => {
+        for (let i = 0; i < 9; i++) {
+            if (this.state.grid[x][i] === val) { return [x,i]; }
+        } 
+        return [-1,-1];    
+    }
+
+    inColHelper = (y, val) => {
+        for (let i = 0; i < 9; i++) {
+            if (this.state.grid[i][y] === val) { return [i,y]; }
+        }
+        return [-1,-1];
+    }
+
+    inSquareHelper = (x, y, val) => {
+        let squareNum = Math.floor(x / 3) + (Math.floor(y / 3) * 3) + 1;
+        let xStart = Math.floor((squareNum - 1) % 3) * 3;
+        let yStart = Math.floor((squareNum - 1) / 3) * 3;
+
+        for (let i = xStart; i < xStart + 3; i++) {
+            for (let j = yStart; j < yStart + 3; j++) {
+                if (this.state.grid[i][j] === val) { return [i,j]; }
+            }
+        }
+        return [-1,-1];
+    }
+
     updateChoice = (choice) => {
         console.log(choice);
         this.setState( {currentChoice: choice });
@@ -140,7 +167,7 @@ class Board extends React.Component {
         const items = [];
 
         for (let j = 0; j < 9; j++) {
-            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]} originalValue={this.state.grid[i][j]} hidden={false} getCurrentChoice={this.getCurrentChoice}/>);
+            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]} originalValue={this.state.grid[i][j]} hidden={false} getCurrentChoice={this.getCurrentChoice} inRowHelper={this.inRowHelper} inColHelper={this.inColHelper} inSquareHelper={this.inSquareHelper}/>);
         }
 
         return items;
@@ -173,8 +200,8 @@ class Tile extends React.Component {
 
     constructor(props) {
         super(props);
-        if (this.props.hidden === false || this.props.value === 0) { this.state =  { value: this.props.value, hidden : false, x: this.props.x, y: this.props.y }; }
-        else {  this.state = { value: this.props.value, hidden : true, x: this.props.x, y: this.props.y }; }
+        if (this.props.hidden === false || this.props.value === 0) { this.state =  { value: this.props.value, hidden : false }; }
+        else {  this.state = { value: this.props.value, hidden : true }; }
     }
 
     getId = () => {
@@ -185,18 +212,42 @@ class Tile extends React.Component {
         return this.props.getCurrentChoice();
     }
 
+    inRowHelper = () => {
+        return this.props.inRowHelper(this.props.y, this.state.value);
+    }
+
+    inColHelper = () => {
+        return this.props.inColHelper(this.props.y, this.state.value);
+    }
+
+    inSquareHelper = () => {
+        return this.props.inSquareHelper(this.props.x, this.props.y, this.state.value);
+    }
+
     onClick = () => {
         console.log(this.getId());
         const currentTile = document.getElementById(this.getId());
-        // Add color
+        // Remove previous choice color color
         let lastRedTile = document.getElementsByClassName("red");
         if (lastRedTile.length > 0) {
             lastRedTile[0].classList.remove("red");
         }
-        currentTile.classList.add("red");
+        let lastGreenTile = document.getElementsByClassName("green");
+        if (lastGreenTile.length > 0) {
+            lastGreenTile[0].classList.remove("green");
+        }
         // Updte value on Tile
         if (this.props.originalValue === 0 && this.getCurrentChoice() !== 0) {
             this.setState( {value: this.getCurrentChoice(), hidden: false, x: this.props.x, y: this.props.y })
+
+            if (this.inRowHelper() !== [-1,-1] && this.inColHelper() !== [-1,-1] && this.inSquareHelper() !== [-1,-1]) {
+                currentTile.classList.add("green");
+            } else {
+                currentTile.classList.add("red");
+            }
+            console.log(this.inRowHelper());
+            console.log(this.inColHelper()); 
+            console.log(this.inSquareHelper());
         }
     }
 

@@ -111,6 +111,11 @@
     background-color: red;
 }
 
+.green {
+    transition: background-color 0.5s ease;
+    background-color: green;
+}
+
 .highlighted {
     transition: background-color 0.5s ease;
     background-color: yellow;
