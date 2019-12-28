@@ -184,6 +184,10 @@ class Tile extends React.Component {
     turnRed = () => {
         console.log(this.getId());
         const currentTile = document.getElementById(this.getId());
+        let lastRedTile = document.getElementsByClassName("red");
+        if (lastRedTile.length > 0) {
+            lastRedTile[0].classList.remove("red");
+        }
         currentTile.classList.add("red");
     }
 
@@ -194,7 +198,7 @@ class Tile extends React.Component {
             );
         } else {
             return (
-                <button className='tile' onClick={this.turnRed}>
+                <button id={this.getId()} className='tile' onClick={this.turnRed}>
                     {this.state.value}
                 </button>
             );
