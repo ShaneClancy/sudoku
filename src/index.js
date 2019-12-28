@@ -163,11 +163,17 @@ class Board extends React.Component {
         return <Choices currentChoice={this.state.currentChoice} updateChoice={this.updateChoice} getCurrentChoice={this.getCurrentChoice}/>
     }
 
+    updateGrid = (x,y) => {
+        let gridCopy = this.state.grid;
+        gridCopy[x][y] = this.getCurrentChoice();
+        this.setState( { grid: gridCopy, currentChoice: this.state.currentChoice });
+    }
+
     renderRow = (i) => {
         const items = [];
 
         for (let j = 0; j < 9; j++) {
-            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]} originalValue={this.state.grid[i][j]} hidden={false} getCurrentChoice={this.getCurrentChoice} inRowHelper={this.inRowHelper} inColHelper={this.inColHelper} inSquareHelper={this.inSquareHelper}/>);
+            items.push(<Tile key={(i)*(9) + j} x={i} y={j} value={this.state.grid[i][j]} originalValue={this.state.grid[i][j]} hidden={false} getCurrentChoice={this.getCurrentChoice} updateGridParent={this.updateGrid} inRowHelper={this.inRowHelper} inColHelper={this.inColHelper} inSquareHelper={this.inSquareHelper}/>);
         }
 
         return items;
@@ -238,7 +244,8 @@ class Tile extends React.Component {
         }
         // Updte value on Tile
         if (this.props.originalValue === 0 && this.getCurrentChoice() !== 0) {
-            this.setState( {value: this.getCurrentChoice(), hidden: false, x: this.props.x, y: this.props.y })
+            this.setState( {value: this.getCurrentChoice(), hidden: false })
+            this.props.updateGridParent(this.props.x, this.props.y);
 
             if (this.inRowHelper() !== [-1,-1] && this.inColHelper() !== [-1,-1] && this.inSquareHelper() !== [-1,-1]) {
                 currentTile.classList.add("green");
