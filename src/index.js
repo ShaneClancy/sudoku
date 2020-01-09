@@ -24,6 +24,7 @@ class Header extends React.Component {
                     <div className="nav-component">Info</div>
                     <div className="nav-component">Help</div>
                     <div className="nav-component">Documentation</div>
+                    <div className="nav-filler"></div>
                 </div>
             </div>
         );
