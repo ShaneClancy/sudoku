@@ -97,27 +97,27 @@ class Board extends React.Component {
 
     }
 
-    inRow = (grid, row, val) => {
+    inRow = (grid, row, val, x, y) => {
         for (let i = 0; i < 9; i++) {
-            if (grid[row][i] === val) { return true; }
+            if (grid[row][i] === val && x !== row && y !== i) { return true; }
         } 
         return false;
     }
 
-    inCol = (grid, col, val) => {
+    inCol = (grid, col, val, x, y) => {
         for (let i = 0; i < 9; i++) {
-            if (grid[i][col] === val) { return true; }
+            if (grid[i][col] === val && x !== i && y !== col) { return true; }
         } 
         return false;
     }
 
-    inSquare = (grid, squareNum, val) => {
+    inSquare = (grid, squareNum, val, x , y) => {
         let xStart = Math.floor((squareNum - 1) % 3) * 3;
         let yStart = Math.floor((squareNum - 1) / 3) * 3;
 
         for (let i = xStart; i < xStart + 3; i++) {
             for (let j = yStart; j < yStart + 3; j++) {
-                if (grid[i][j] === val) { return true; }
+                if (grid[i][j] === val && x !== i && y !== j) { return true; }
             }
         }
         return false;
@@ -169,6 +169,30 @@ class Board extends React.Component {
         this.setState( { grid: gridCopy, currentChoice: this.state.currentChoice });
     }
 
+    checkGameOver = () => {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (this.state.grid[i][j] === 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    checkIfWin = () => {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (this.inRow(this.state.grid, i, this.state.grid[i][j], i, j) 
+                || this.inCol(this.state.grid, j, this.state.grid[i][j], i, j) 
+                || this.inSquare(this.state.grid, Math.floor(i / 3) + (Math.floor(j / 3) * 3) + 1, this.state.grid[i][j], i, j) ){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     renderRow = (i) => {
         const items = [];
 
@@ -181,8 +205,17 @@ class Board extends React.Component {
 
     render() {
 
+        let win = '';
+        if (this.checkGameOver() === true && this.checkIfWin()) {
+            win = 'You Won!'
+        } else {
+            win = 'Game not over yet!';
+        }
         return  (
             <div className="content-container">
+                <div>
+                    <p className="game-state">{win}</p>
+                </div>
                 <div className="game-board">
                     <div className="board-row"> {this.renderRow(0)} </div>
                     <div className="board-row"> {this.renderRow(1)} </div>
