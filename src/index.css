@@ -42,6 +42,21 @@
     background-color: black;
 }
 
+.nav-filler {
+    min-width: 70%;
+    display: inline-block;
+    height: 2em;
+    border-left: 0.1em solid lightgray;
+    border-right: 0.1em solid lightgray;
+    color: lightgray;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    padding-top: 8px;
+    text-align: center;
+    border-radius: 5%;
+    background-color: black;
+}
+
 .nav-component:hover {
     transition: background-color 1s ease;
     background-color: rgb(255, 51, 0);
