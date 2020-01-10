@@ -78,6 +78,29 @@
     padding-top: 15px;
 }
 
+.difficulty-button {
+    display: inline-block;
+    margin-top: 15em;
+    margin-left: 10%;
+    margin-right: 10%;
+    background-color: rgb(240, 240, 240);
+    border: 1px solid black;
+    border-radius: 3%;
+    height: 25em;
+
+}
+
+.difficulty-button:hover {
+    background-color: rgb(150, 150, 150);
+    transition: background-color 0.5s ease;
+}
+
+.resize-button {
+    width: 40%;
+    position: relative;
+    left: 20%;
+}
+
 
 .game-board {
     max-width: 750px;
