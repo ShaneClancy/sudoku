@@ -32,12 +32,39 @@ class Header extends React.Component {
 }
 
 class Game extends React.Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = { gameState: 'start' , difficulty: 'EASY'};
+    }
+
+    easyOnClick = () => {
+        this.setState({ gameState: 'play', difficulty: 'EASY'});
+    }
+
+    mediumOnClick = () => {
+        this.setState({ gameState: 'play', difficulty: 'MEDIUM'});
+    }
+
+    hardOnClick = () => {
+        this.setState({ gameState: 'play', difficulty: 'HARD'});
+    }
+
     render() {
+        const items = [];
+        const diff = this.state.difficulty;
+        if (this.state.gameState !== 'start') {
+            items.push(<div key={0}></div>);
+            items.push(<div key={1}><Board difficulty={diff}/></div>);
+            items.push(<div key={2}></div>);
+        } else {
+            items.push(<button key={0} className="difficulty-button" value={"EASY"} onClick={this.easyOnClick}>EASY</button>);
+            items.push(<button key={1} className="difficulty-button resize-button" value={"MEDIUM"} onClick={this.mediumOnClick}>MEDIUM</button>);
+            items.push(<button key={2} className="difficulty-button" value={"HARD"} onClick={this.hardOnClick}>HARD</button>);
+        }
         return (
             <div className="content">
-                <div></div>
-                <div><Board /></div>
-                <div></div> 
+                {items}
             </div>
         )
     }
@@ -56,7 +83,7 @@ class Board extends React.Component {
             'HARD' : 60
         };
         
-        let counter = modeMap['EASY'];
+        let counter = modeMap[this.props.difficulty];
 
         let gridCopy = [];
         let pickedInRow = [];
