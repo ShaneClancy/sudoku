@@ -51,7 +51,7 @@ class Board extends React.Component {
         // this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
 
         const modeMap = {
-            'EASY' : 1,
+            'EASY' : 40,
             'MEDIUM' : 50,
             'HARD' : 60
         };
@@ -180,6 +180,9 @@ class Board extends React.Component {
         let gridCopy = this.state.grid;
         gridCopy[x][y] = this.getCurrentChoice();
         this.setState( { grid: gridCopy, currentChoice: this.state.currentChoice });
+        console.log(this.checkGameOver());
+        console.log(this.checkIfWin());
+        this.forceUpdate();
     }
 
     checkGameOver = () => {
@@ -194,16 +197,11 @@ class Board extends React.Component {
     }
 
     checkIfWin = () => {
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-                if (this.inRow(this.state.grid, i, this.state.grid[i][j], i, j) 
-                || this.inCol(this.state.grid, j, this.state.grid[i][j], i, j) 
-                || this.inSquare(this.state.grid, Math.floor(i / 3) + (Math.floor(j / 3) * 3) + 1, this.state.grid[i][j], i, j) ){
-                    return false;
-                }
-            }
+        if (this.checkGameOver() === true && document.getElementsByClassName('red').length === 0 ) {
+            return true;
+        } else { 
+            return false 
         }
-        return true;
     }
 
     renderRow = (i) => {
@@ -219,7 +217,7 @@ class Board extends React.Component {
     render() {
 
         let win = '';
-        if (this.checkGameOver() === true && this.checkIfWin()) {
+        if (this.checkGameOver() === true && this.checkIfWin() === true) {
             win = 'You Won!'
         } else {
             win = 'Game not over yet!';
@@ -279,7 +277,7 @@ class Tile extends React.Component {
     onClick = () => {
         console.log(this.getId());
         const currentTile = document.getElementById(this.getId());
-        // Remove previous choice color color
+        // Remove previous choice color
         let lastRedTile = document.getElementsByClassName("red");
         if (lastRedTile.length > 0) {
             lastRedTile[0].classList.remove("red");
