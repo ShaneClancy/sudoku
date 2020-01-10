@@ -74,8 +74,6 @@ class Board extends React.Component {
 
     constructor(props) {
         super(props);
-        // Initialize Grid and Current Selected Choice
-        // this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
 
         const modeMap = {
             'EASY' : 40,
