@@ -50,48 +50,54 @@ class Board extends React.Component {
         // Initialize Grid and Current Selected Choice
         // this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
 
-        let gridCopy = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        ];
-
         const modeMap = {
             'EASY' : 40,
-            'MEDIUM' : 30,
-            'HARD' : 20,
+            'MEDIUM' : 50,
+            'HARD' : 60
         };
         
-        let counter = modeMap['EASY'];
-        let spotChoices = [[0,0]];
+        let counter = modeMap['MEDIUM'];
+
+        let gridCopy = [];
+        let pickedInRow = [];
+        // randomize initial row
+        for (let i = 0; i < 9; i++) {
+            let choice = Math.floor((Math.random() * 9) + 1);
+            if (!pickedInRow.includes(choice)) { 
+                pickedInRow.push(choice);
+            } else {
+                i--;
+            }
+        }
+        gridCopy.push(Array.from(pickedInRow));
+        // shift 3 twice
+        for (let j = 0; j < 2; j++){
+            for (let i = 0; i < 3; i++) {
+                let shift = pickedInRow.shift();
+                pickedInRow.push(shift);
+            }
+            gridCopy.push(Array.from(pickedInRow));
+        }
+
+        //shift 1, shift 3, shift 3 (x2) for remaining rows
+        for (let j = 0; j < 2; j++) {
+            let shift = pickedInRow.shift();
+            pickedInRow.push(shift);
+            gridCopy.push(Array.from(pickedInRow));
+            for (let i = 0; i < 3; i++) {
+                let shift = pickedInRow.shift();
+                pickedInRow.push(shift);
+            }
+            gridCopy.push(Array.from(pickedInRow));
+            for (let i = 0; i < 3; i++) {
+                let shift = pickedInRow.shift();
+                pickedInRow.push(shift);
+            }
+            gridCopy.push(Array.from(pickedInRow));
+        }
 
         while (counter > 0) {
-            let x = Math.floor(Math.random() * 9);
-            let y = Math.floor(Math.random() * 9);
-            if (!spotChoices.includes([x,y])) {
-                let squareNum = 0;
-                squareNum = Math.floor(x / 3) + (Math.floor(y / 3) * 3) + 1;
-                // guess random number to put in square.
-                let indCounter = 0;
-                while(true) {
-                    const guess = Math.floor(Math.random() * 9) + 1;
-                    if (!(this.inRow(gridCopy, x, guess)) && !(this.inCol(gridCopy, y, guess)) && !(this.inSquare(gridCopy, squareNum, guess))) {
-                        gridCopy[x][y] = guess;
-                        counter--;
-                        spotChoices.push([x,y]);
-                        break;
-                    } else {
-                        indCounter++;
-                        if (indCounter >= 9) { break; }
-                    }
-                }
-            }
+            break;
         }
         
         this.state = ( { grid : gridCopy, currentChoice: 0 } );
@@ -100,14 +106,14 @@ class Board extends React.Component {
 
     inRow = (grid, row, val, x, y) => {
         for (let i = 0; i < 9; i++) {
-            if (grid[row][i] === val && x !== row && y !== i) { return true; }
+            if (grid[row][i] === val) { return true; }
         } 
         return false;
     }
 
     inCol = (grid, col, val, x, y) => {
         for (let i = 0; i < 9; i++) {
-            if (grid[i][col] === val && x !== i && y !== col) { return true; }
+            if (grid[i][col] === val) { return true; }
         } 
         return false;
     }
@@ -124,16 +130,16 @@ class Board extends React.Component {
         return false;
     }
 
-    inRowHelper = (x, val) => {
+    inRowHelper = (x, y, val) => {
         for (let i = 0; i < 9; i++) {
-            if (this.state.grid[x][i] === val) { return [x,i]; }
+            if (this.state.grid[x][i] === val && i !== y) { return [x,i]; }
         } 
         return [-1,-1];    
     }
 
-    inColHelper = (y, val) => {
+    inColHelper = (x, y, val) => {
         for (let i = 0; i < 9; i++) {
-            if (this.state.grid[i][y] === val) { return [i,y]; }
+            if (this.state.grid[i][y] === val && i !== x) { return [i,y]; }
         }
         return [-1,-1];
     }
@@ -145,7 +151,7 @@ class Board extends React.Component {
 
         for (let i = xStart; i < xStart + 3; i++) {
             for (let j = yStart; j < yStart + 3; j++) {
-                if (this.state.grid[i][j] === val) { return [i,j]; }
+                if (this.state.grid[i][j] === val && x !== i && y !== j) { return [i,j]; }
             }
         }
         return [-1,-1];
@@ -253,15 +259,15 @@ class Tile extends React.Component {
     }
 
     inRowHelper = () => {
-        return this.props.inRowHelper(this.props.y, this.state.value);
+        return this.props.inRowHelper(this.props.x, this.props.y, this.props.getCurrentChoice());
     }
 
     inColHelper = () => {
-        return this.props.inColHelper(this.props.y, this.state.value);
+        return this.props.inColHelper(this.props.x, this.props.y, this.props.getCurrentChoice());
     }
 
     inSquareHelper = () => {
-        return this.props.inSquareHelper(this.props.x, this.props.y, this.state.value);
+        return this.props.inSquareHelper(this.props.x, this.props.y, this.props.getCurrentChoice());
     }
 
     onClick = () => {
@@ -281,14 +287,14 @@ class Tile extends React.Component {
             this.setState( {value: this.getCurrentChoice(), hidden: false })
             this.props.updateGridParent(this.props.x, this.props.y);
 
-            if (this.inRowHelper() !== [-1,-1] && this.inColHelper() !== [-1,-1] && this.inSquareHelper() !== [-1,-1]) {
+            if (this.inRowHelper()[0] === -1 && this.inColHelper()[0] === -1 && this.inSquareHelper()[0] === -1) {
                 currentTile.classList.add("green");
             } else {
                 currentTile.classList.add("red");
             }
-            console.log(this.inRowHelper());
-            console.log(this.inColHelper()); 
-            console.log(this.inSquareHelper());
+            console.log('row: ', this.inRowHelper());
+            console.log('col: ', this.inColHelper()); 
+            console.log('square: ', this.inSquareHelper());
         }
     }
 
