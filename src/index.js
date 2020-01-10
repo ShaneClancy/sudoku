@@ -51,12 +51,12 @@ class Board extends React.Component {
         // this.state = { grid: new Array(9).fill(new Array(9).fill(0)), currentChoice: 0 };
 
         const modeMap = {
-            'EASY' : 40,
+            'EASY' : 1,
             'MEDIUM' : 50,
             'HARD' : 60
         };
         
-        let counter = modeMap['MEDIUM'];
+        let counter = modeMap['EASY'];
 
         let gridCopy = [];
         let pickedInRow = [];
@@ -97,7 +97,13 @@ class Board extends React.Component {
         }
 
         while (counter > 0) {
-            break;
+            let randomXToRemove = Math.floor((Math.random() * 9));
+            let randomYToRemove = Math.floor((Math.random() * 9));
+            console.log(randomXToRemove, randomXToRemove);
+            if (gridCopy[randomXToRemove][randomYToRemove] !== 0) {
+                gridCopy[randomXToRemove][randomYToRemove] = 0;
+                counter -= 1;
+            }
         }
         
         this.state = ( { grid : gridCopy, currentChoice: 0 } );
