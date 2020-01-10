@@ -99,7 +99,6 @@ class Board extends React.Component {
         while (counter > 0) {
             let randomXToRemove = Math.floor((Math.random() * 9));
             let randomYToRemove = Math.floor((Math.random() * 9));
-            console.log(randomXToRemove, randomXToRemove);
             if (gridCopy[randomXToRemove][randomYToRemove] !== 0) {
                 gridCopy[randomXToRemove][randomYToRemove] = 0;
                 counter -= 1;
@@ -164,7 +163,6 @@ class Board extends React.Component {
     }
 
     updateChoice = (choice) => {
-        console.log(choice);
         this.setState( {currentChoice: choice });
     }
 
@@ -180,9 +178,6 @@ class Board extends React.Component {
         let gridCopy = this.state.grid;
         gridCopy[x][y] = this.getCurrentChoice();
         this.setState( { grid: gridCopy, currentChoice: this.state.currentChoice });
-        console.log(this.checkGameOver());
-        console.log(this.checkIfWin());
-        this.forceUpdate();
     }
 
     checkGameOver = () => {
@@ -275,7 +270,6 @@ class Tile extends React.Component {
     }
 
     onClick = () => {
-        console.log(this.getId());
         const currentTile = document.getElementById(this.getId());
         // Remove previous choice color
         let lastRedTile = document.getElementsByClassName("red");
@@ -296,9 +290,6 @@ class Tile extends React.Component {
             } else {
                 currentTile.classList.add("red");
             }
-            console.log('row: ', this.inRowHelper());
-            console.log('col: ', this.inColHelper()); 
-            console.log('square: ', this.inSquareHelper());
         }
     }
 
@@ -345,11 +336,6 @@ class Choices extends React.Component {
         return <Choice value={i} updateChoice={updateChoice}/>
     }
 
-    getCurrentChoiceTesting = () => {
-        console.log(this.props.currentChoice);
-    }
-
-
     render() {
         const items = [];
         
@@ -360,7 +346,6 @@ class Choices extends React.Component {
         return (
             <div className="choices-container">
                 {items}
-                <button onClick={this.getCurrentChoiceTesting}>Current Choice</button>
             </div>
         );
     }
