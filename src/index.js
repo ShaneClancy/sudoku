@@ -17,14 +17,14 @@ class Header extends React.Component {
     render() {
         return (
             <div className="top">
+                <div className="nav">
+                    <a className="nav-component" href="https://github.com/ShaneClancy/sudoku/blob/master/README.md">Info</a>
+                    <a className="nav-component" href="https://sudoku.com/how-to-play/sudoku-rules-for-complete-beginners/">Help</a>
+                    <a className="nav-component" href="https://github.com/ShaneClancy/sudoku">Documentation</a>
+                    <div className="nav-filler"></div>
+                </div>
                 <div className="header">
                     <div className="title">Sudoku</div>
-                </div>
-                <div className="nav">
-                    <div className="nav-component">Info</div>
-                    <div className="nav-component">Help</div>
-                    <div className="nav-component">Documentation</div>
-                    <div className="nav-filler"></div>
                 </div>
             </div>
         );
