@@ -241,8 +241,6 @@ class Board extends React.Component {
         let win = '';
         if (this.checkGameOver() === true && this.checkIfWin() === true) {
             win = 'You Won!'
-        } else {
-            win = 'Game not over yet!';
         }
         return  (
             <div className="content-container">
